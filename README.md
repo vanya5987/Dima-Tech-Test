@@ -1,4 +1,4 @@
-# Тестовое задание - Dima-Tech
+# Тестовое задание - DimaTech
 
 FastAPI + Swagger UI (/docs) вместо Sanic, допускается условиями ТЗ.
 Конфигурация в JSON-файлах в src/binary_files/ (settings.json для локального
