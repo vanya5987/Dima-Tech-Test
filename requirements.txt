@@ -1,0 +1,10 @@
+sqlalchemy
+fastapi
+uvicorn
+alembic
+pydantic
+asyncpg
+passlib
+PyJWT
+email-validator
+bcrypt==4.0.1
