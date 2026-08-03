@@ -25,11 +25,6 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-# Берём URL БД из settings.json приложения, а не из alembic.ini —
-# так конфигурация БД задаётся в одном месте, а не дублируется.
-# Это же позволяет запускать миграции в Docker без правки alembic.ini:
-# внутри контейнера settings.json подменяется на settings.docker.json
-# с другим хостом БД (см. docker-compose.yml).
 config.set_main_option("sqlalchemy.url", settings["db_url"])
 
 # other values from the config, defined by the needs of env.py,

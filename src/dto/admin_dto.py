@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 class AdminMeDto(BaseModel):
     id: int
@@ -6,3 +6,8 @@ class AdminMeDto(BaseModel):
     full_name: str
 
     model_config = {"from_attributes": True}
+
+class AdminCreateRequest(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: str

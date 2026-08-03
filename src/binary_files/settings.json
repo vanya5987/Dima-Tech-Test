@@ -1,5 +1,8 @@
 {
   "db_url": "postgresql+asyncpg://postgres:password@localhost:5432/dima_tech",
+  "db_port": 5432,
+  "docker_port": 8888,
+  "web_port": 5555,
   "db_echo": true,
   "db_pool_size": 20,
   "db_max_overflow": 10,

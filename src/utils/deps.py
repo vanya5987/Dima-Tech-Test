@@ -19,13 +19,13 @@ __engine_dto = EngineDto(
     url=settings["db_url"],
     echo=settings["db_echo"],
     pool_size=settings["db_pool_size"],
-    max_overflow=settings["db_max_overflow"]
+    max_overflow=settings["db_max_overflow"],
 )
 
-__engine = CreateEngine(__engine_dto, __session_dto)
+engine = CreateEngine(__engine_dto, __session_dto)
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    async with __engine.session() as session:
+    async with engine.session() as session:
         yield session
 
 session_dep = Annotated[AsyncSession, Depends(get_session)]

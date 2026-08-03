@@ -10,8 +10,8 @@ FastAPI + Swagger UI (/docs) вместо Sanic, допускается усло
 
 | Роль  | Email                  | Пароль        |
 |-------|------------------------|---------------|
-| User  | new_user@example.com  | password      |
-| Admin | user@example.com | password |
+| User  | user@example.com  | password      |
+| Admin | admin@example.com | password |
 
 ## Авторизация в Swagger UI
 
@@ -31,10 +31,14 @@ docker compose up --build
 Python 3.12+, локально запущенный PostgreSQL (user=postgres, password=password, база dima_tech, см. src/binary_files/settings.json).
 
 ```bash
-psql -U postgres -c "CREATE DATABASE dima_tech;"
+sudo -u postgres psql -c "CREATE DATABASE dima_tech;"
+sudo sed -i "s/local   all   postgres   peer/local   all   postgres   md5/" /etc/postgresql/*/main/pg_hba.conf
+sudo systemctl restart postgresql
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'password';"
 
 python -m venv .venv
 source .venv/bin/activate
+
 pip install -r requirements.txt
 
 alembic upgrade head
@@ -42,7 +46,4 @@ alembic upgrade head
 python -m src.main
 ```
 
-После запуска, любым из вариантов:
-
-API: http://localhost:8888
 Swagger UI: http://localhost:8888/docs

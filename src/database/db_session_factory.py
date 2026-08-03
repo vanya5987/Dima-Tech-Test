@@ -10,6 +10,7 @@ class CreateEngine:
             echo=engine_dto.echo,
             pool_size=engine_dto.pool_size,
             max_overflow=engine_dto.max_overflow,
+            pool_pre_ping=True
         )
 
         self.__async_session = async_sessionmaker(
