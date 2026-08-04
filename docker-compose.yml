@@ -3,46 +3,40 @@ version: '3.8'
 services:
   db:
     image: postgres:16
-    container_name: db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: dima_tech
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      app_network:
-        aliases:
-          - db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dima_tech"]
       interval: 3s
       timeout: 3s
       retries: 5
+      start_period: 20s
 
-  app:
+  migrate:
     build: .
-    container_name: app
+    command: alembic upgrade head
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:password@db:5432/dima_tech
     depends_on:
       db:
         condition: service_healthy
+    restart: "no"
+
+  app:
+    build: .
     ports:
       - "5555:8888"
-    dns:
-      - 127.0.0.11
-    dns_opt:
-      - ndots:1
-      - single-request
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:password@db:5432/dima_tech
     volumes:
       - ./src/binary_files/settings.json:/app/src/binary_files/settings.json:ro
-    networks:
-      - app_network
-
-networks:
-  app_network:
-    driver: bridge
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:

@@ -7,6 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8888
-
-CMD ["sh", "-c", "alembic upgrade head && python -m src.main"]
+CMD ["sh", "-c", "python -m src.main"]
