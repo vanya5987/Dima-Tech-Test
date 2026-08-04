@@ -1,13 +1,10 @@
-from src.utils.deps import settings
-
 from datetime import datetime, timedelta, timezone
 
-import jwt
+import jwt, os
 
-_SECRET_KEY: str = settings["jwt_secret"]
-_ALGORITHM: str = settings.get("jwt_algorithm", "HS256")
-_EXPIRE_MINUTES: int = settings.get("jwt_expire_minutes", 60)
-
+_SECRET_KEY: str = os.getenv("JWT_SECRET", "")
+_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "")
+_EXPIRE_MINUTES: int = int(os.getenv("JWT_EXPIRE_MINUTES", 60))
 
 class JwtHandler:
     @staticmethod

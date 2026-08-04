@@ -3,14 +3,16 @@ from decimal import Decimal
 from fastapi import APIRouter, HTTPException, Request, status
 from sqlalchemy.exc import IntegrityError
 
-from src.utils.deps import session_dep, settings
+from src.utils.deps import session_dep
 from src.database.models import Account, Payment, User
 from src.dto.webhook_dto import PaymentWebhookRequest
 from src.utils.webhook_emulator import WebhookEmulator
 
+import os
+
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
-_SECRET_KEY: str = settings["webhook_secret_key"]
+_SECRET_KEY: str = os.getenv("WEBHOOK_SECRET_KEY", "")
 
 @router.post("/payment")
 async def process_payment_webhook(

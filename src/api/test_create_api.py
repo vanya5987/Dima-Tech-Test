@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import HTTPException, status
 
 from src.database.models import Admin, User
 from src.dto.admin_dto import AdminCreateRequest
@@ -26,13 +27,23 @@ class TestApi:
                 full_name=payload.full_name,
             )
             session.add(new_entity)
+
             try:
                 await session.commit()
                 await session.refresh(new_entity)
                 return new_entity
-            except IntegrityError:
+            except IntegrityError as ex:
                 await session.rollback()
-                return None
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=f"{model_cls.__name__} with email '{payload.email}' already exists.",
+                ) from ex
+            except Exception as ex:
+                await session.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Failed to create {model_cls.__name__}: {ex}",
+                ) from ex
 
         return existing_entity
 

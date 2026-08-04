@@ -2,24 +2,27 @@ from src.database.db_session_factory import CreateEngine
 from src.dto.db_factory_dto.session_dto import SessionDto
 from src.dto.db_factory_dto.engine_dto import EngineDto
 
-from src.api.json_api.json_controller import JsonAPI
-from root_file_indicator import RootPathIndicator
-
 from typing import AsyncGenerator, Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import Depends
 import os
 
-settings = JsonAPI.read_json_file(os.path.join(RootPathIndicator.get_root_path(),
-                                               "src", "binary_files", "settings.json"))
+from dotenv import load_dotenv
+load_dotenv()
 
-__session_dto = SessionDto(expire_on_commit=settings["session_expire_on_commit"])
+__expire_flag: bool = os.getenv("SESSION_EXPIRE_TO_COMMIT", "false").lower() == "true"
+__url: str = os.getenv("DB_URL", "")
+__db_echo: bool = os.getenv("DB_ECHO", "false").lower() == "true"
+__pool_size: int = int(os.getenv("DB_POOL_SIZE", 20))
+__max_overflow: int = int(os.getenv("DB_MAX_OVERFLOW", 10))
+
+__session_dto = SessionDto(expire_on_commit=__expire_flag)
 __engine_dto = EngineDto(
-    url=settings["db_url"],
-    echo=settings["db_echo"],
-    pool_size=settings["db_pool_size"],
-    max_overflow=settings["db_max_overflow"],
+    url=__url,
+    echo=__db_echo,
+    pool_size=__pool_size,
+    max_overflow=__max_overflow,
 )
 
 engine = CreateEngine(__engine_dto, __session_dto)

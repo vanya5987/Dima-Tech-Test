@@ -9,6 +9,7 @@ from src.api.admin_api import router as admin_router
 from src.api.test_router import router as test_router
 
 from src.server.server_runner import ServerRunner
+import os
 
 app = FastAPI()
 
@@ -30,4 +31,5 @@ async def sqlalchemy_exception_handler(request, exc: SQLAlchemyError):
     return JSONResponse(status_code=503, content={"detail": detail},)
 
 if __name__ == "__main__":
-    ServerRunner.create_and_run_server(reflection_name="src.main:app", port=8888, host="0.0.0.0", reload=False)
+    ServerRunner.create_and_run_server(reflection_name="src.main:app",
+                                       port=int(os.getenv("APP_PORT", 8888)), host="0.0.0.0", reload=False)
