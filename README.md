@@ -51,4 +51,4 @@ Python 3.12+, локально запущенный PostgreSQL (user=postgres, p
 9) python -m src.main
 ```
 
-Swagger UI: http://localhost:8888/docs
+Swagger UI: http://localhost:8888/docs (Вместо 8888 ставим порт на котором запущен сервер с приложением)
